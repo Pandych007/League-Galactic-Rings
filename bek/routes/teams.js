@@ -4,7 +4,27 @@ const { authenticate } = require("../middlewares/auth");
 const { Op } = require("sequelize");
 const router = express.Router();
 
-router.get("/", async (req, res, next) => {});
+router.get("/", async (req, res, next) => {
+  try {
+    const teams = await Team.findAll({
+      where: { user_id: 1 },
+      include: [
+        {
+          model: Player,
+          as: "players",
+          through: { attributes: [] },
+          attributes: ["id", "name", "position", "points", "cost"],
+        },
+      ],
+      order: [["createdAt", "DESC"]],
+    });
+
+    res.json(teams);
+  } catch (error) {
+    console.log(error);
+    next(next);
+  }
+});
 
 router.post("/", authenticate, async (req, res, next) => {
   try {
