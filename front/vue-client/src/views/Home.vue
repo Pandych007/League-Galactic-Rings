@@ -1,14 +1,5 @@
 <template>
   <div class="page">
-    <!-- HEADER -->
-    <header class="header">
-      <div class="container header__content">
-        <div class="logo">🏆 <span>VirtualBasket</span></div>
-
-        <button class="btn btn--outline">Зарегистрироваться</button>
-      </div>
-    </header>
-
     <!-- HERO -->
     <section class="hero">
       <div class="container hero__content">

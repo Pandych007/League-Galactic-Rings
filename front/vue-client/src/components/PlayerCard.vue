@@ -177,4 +177,8 @@ const positionClass = computed(() => {
 .d-flex div {
   height: 25px;
 }
+.player-avatar {
+  height: 280px;
+  object-fit: cover;
+}
 </style>

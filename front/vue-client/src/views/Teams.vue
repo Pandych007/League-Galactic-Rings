@@ -25,7 +25,7 @@
             </div>
 
             <div class="selected-players-section">
-              <h4>Выбранные игроки ({{ selectedPlayers.length }}/12)</h4>
+              <h4>Выбранные игроки ({{ selectedPlayers.length }}/7)</h4>
               <div
                 v-if="selectedPlayers.length > 0"
                 class="selected-players-list"
@@ -38,17 +38,19 @@
                   <div class="player-info">
                     <span class="player-name">{{ player.name }}</span>
                     <span class="player-position">{{ player.position }}</span>
-                    <span class="player-cost"
-                      >${{ player.cost.toLocaleString() }}</span
-                    >
+                    <span class="player-cost">
+                      <div class="d-flex">
+                        <div>{{ player.cost.toLocaleString() }}</div>
+                        <div>
+                          <img
+                            width="20px"
+                            height="20px"
+                            src="http://localhost:3000/img/basket-coin.png"
+                          />
+                        </div>
+                      </div>
+                    </span>
                   </div>
-                  <button
-                    @click="removeFromTeam(player)"
-                    type="button"
-                    class="remove-btn"
-                  >
-                    ×
-                  </button>
                 </div>
               </div>
               <div v-else class="no-players-selected">
@@ -60,22 +62,51 @@
             <div class="team-budget">
               <div class="budget-item">
                 <span class="budget-label">Бюджет:</span>
-                <span class="budget-value">${{ budget.toLocaleString() }}</span>
+                <span class="budget-value">
+                  <div class="d-flex">
+                    <div>{{ budget.toLocaleString() }}</div>
+                    <div>
+                      <img
+                        width="20px"
+                        height="20px"
+                        src="http://localhost:3000/img/basket-coin.png"
+                      />
+                    </div>
+                  </div>
+                </span>
               </div>
               <div class="budget-item">
                 <span class="budget-label">Общая стоимость:</span>
-                <span class="budget-value"
-                  >${{ totalCost.toLocaleString() }}</span
-                >
+                <span class="budget-value">
+                  <div class="d-flex">
+                    <div>{{ totalCost }}</div>
+                    <div>
+                      <img
+                        width="20px"
+                        height="20px"
+                        src="http://localhost:3000/img/basket-coin.png"
+                      />
+                    </div>
+                  </div>
+                </span>
               </div>
               <div
                 class="budget-item"
                 :class="{ 'budget-warning': totalCost > BUDGET_LIMIT }"
               >
                 <span class="budget-label">Остаток:</span>
-                <span class="budget-value"
-                  >${{ (budget - totalCost).toLocaleString() }}</span
-                >
+                <span class="budget-value">
+                  <div class="d-flex">
+                    <div>{{ (budget - totalCost).toLocaleString() }}</div>
+                    <div>
+                      <img
+                        width="20px"
+                        height="20px"
+                        src="http://localhost:3000/img/basket-coin.png"
+                      />
+                    </div>
+                  </div>
+                </span>
               </div>
             </div>
 
@@ -156,7 +187,16 @@
 
                   <div class="player-footer">
                     <div class="player-cost">
-                      ${{ player.cost.toLocaleString() }}
+                      <div class="d-flex">
+                        <div>{{ player.cost.toLocaleString() }}</div>
+                        <div>
+                          <img
+                            width="20px"
+                            height="20px"
+                            src="http://localhost:3000/img/basket-coin.png"
+                          />
+                        </div>
+                      </div>
                     </div>
                     <div
                       v-if="isPlayerSelected(player)"
@@ -210,8 +250,18 @@
           <div class="team-stats">
             <span class="points">{{ team.total_points }} очков</span>
             <span class="budget"
-              >Бюджет: ${{ team.budget?.toLocaleString() }}</span
-            >
+              >Бюджет:
+              <div class="d-flex">
+                <div>{{ team.budget?.toLocaleString() }}</div>
+                <div>
+                  <img
+                    width="20px"
+                    height="20px"
+                    src="http://localhost:3000/img/basket-coin.png"
+                  />
+                </div>
+              </div>
+            </span>
           </div>
         </div>
 
@@ -227,25 +277,65 @@
               class="team-player"
             >
               <div class="player-info">
-                <strong>{{ player.name }}</strong>
+                <img
+                  v-if="player.avatar"
+                  :src="'http://localhost:3000' + player.avatar"
+                  :alt="player.name"
+                  class="player-avatar"
+                />
+              </div>
+              <div
+                class="player-info"
+                style="
+                  padding: 10px;
+                  align-items: center;
+                  justify-content: center;
+                "
+              >
                 <span class="position">{{ player.position }}</span>
+
+                <strong>{{ player.name }}</strong>
               </div>
               <div class="player-stats">
-                <span>{{ player.points }} очков</span>
-                <span>${{ player.cost?.toLocaleString() }}</span>
+                <div>
+                  <span>{{ player.points }}</span> <span>очки</span>
+                </div>
+                <div>
+                  <span>{{ player.rebounds }}</span
+                  ><span> подборы</span>
+                </div>
+                <div>
+                  <span>{{ player.assists }}</span
+                  ><span> передачи</span>
+                </div>
+                <div>
+                  <span>{{ player.fouls }} </span><span> фолы</span>
+                </div>
+                <div>
+                  <span>{{ player.steals }}</span> <span> перехваты</span>
+                </div>
+                <div>
+                  <span>{{ player.turnovers }}</span> <span> потери</span>
+                </div>
+                <div>
+                  <span>{{ player.blocks }}</span> <span> блоки</span>
+                </div>
               </div>
+              <!--<span>
+                  <div class="d-flex">
+                    <div>{{ player.cost?.toLocaleString() }}</div>
+                    <div>
+                      <img
+                        width="20px"
+                        height="20px"
+                        src="http://localhost:3000/img/basket-coin.png"
+                      />
+                    </div>
+                  </div>
+                </span>-->
             </div>
           </div>
           <div v-else class="no-players">В команде пока нет игроков</div>
-        </div>
-
-        <div class="team-actions">
-          <button @click="viewTeam(team.id)" class="view-btn">
-            Просмотреть
-          </button>
-          <button @click="deleteTeam(team.id)" class="delete-btn">
-            Удалить
-          </button>
         </div>
       </div>
     </div>
@@ -309,7 +399,9 @@ const loadTeams = async () => {
   loading.value = true;
   try {
     const response = await api.get("/team");
+
     teams.value = response.data;
+    console.log(teams.value);
   } catch (error) {
     console.error("Ошибка загрузки команд:", error);
   } finally {
@@ -813,10 +905,14 @@ watch(showTeamForm, (newVal) => {
 }
 
 .player-stats {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-wrap: wrap;
+  color: #fff;
   gap: 0.5rem;
   margin-bottom: 1rem;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
 }
 
 .stat {
@@ -983,15 +1079,13 @@ watch(showTeamForm, (newVal) => {
 .players-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 0.5rem;
+  gap: 15px;
   margin-bottom: 1rem;
 }
 
 .team-player {
-  background: #f8f9fa;
-  padding: 0.75rem;
-  border-radius: 4px;
-  border-left: 4px solid #3498db;
+  background: #333;
+  border-radius: 10px;
 }
 
 .player-info {
@@ -1101,5 +1195,30 @@ watch(showTeamForm, (newVal) => {
   .team-stats {
     justify-content: space-between;
   }
+}
+.d-flex,
+.d-flex div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.page-header h1 {
+  color: #fff;
+  text-align: center;
+}
+.player-avatar {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+}
+.player-stats div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 40%;
+  text-align: center;
+}
+.player-stats div span {
+  display: block;
 }
 </style>

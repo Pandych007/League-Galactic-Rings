@@ -1,14 +1,25 @@
 <template>
-  <router-link to="/players">Игроки</router-link>
-  <router-link to="/statisticks">Статистика</router-link>
-  <template v-if="isAuthenticated">
-    <router-link to="/teams">Мои команды</router-link>
-    <router-link to="/profile">Профиль</router-link>
-    <button @click="logout">Выйти ({{ user?.name }})</button>
-  </template>
-  <template v-else>
-    <router-link to="/register">Регистрация</router-link>
-  </template>
+  <!-- HEADER -->
+  <header class="header">
+    <div class="container header__content">
+      <div class="logo">
+        🏆 <span><router-link to="/">VirtualBasket</router-link></span>
+      </div>
+
+      <router-link to="/players">Игроки</router-link>
+      <router-link to="/ranking">Статистика</router-link>
+      <template v-if="isAuthenticated">
+        <router-link to="/teams">Мои команды</router-link>
+        <router-link to="/profile">Профиль</router-link>
+        <button @click="logout" class="btn">Выйти ({{ user?.name }})</button>
+      </template>
+      <template v-else>
+        <button class="btn btn--outline">
+          <router-link to="/register">Зарегистрироваться</router-link>
+        </button>
+      </template>
+    </div>
+  </header>
 </template>
 <script setup>
 import { useAuthStore } from "../stores/auth";
@@ -28,7 +39,7 @@ const forceUpdate = ref(0);
 const logout = () => {
   authStore.logout();
   forceUpdate.value++;
-  router.push("/login");
+  router.push("/");
 };
 
 watch(token, () => {
