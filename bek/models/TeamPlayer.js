@@ -9,6 +9,12 @@ const TeamPlayer = sequelize.define(
       primaryKey: true,
       autoIncrement: true,
     },
+    team_id: {
+      type: DataTypes.INTEGER,
+    },
+    player_id: {
+      type: DataTypes.INTEGER,
+    },
   },
   {
     tableName: "team_players",

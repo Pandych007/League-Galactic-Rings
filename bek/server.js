@@ -84,7 +84,7 @@ async function startServer() {
     app.listen(PORT, () => {
       console.log(`Сервер запущен на порту ${PORT}`);
       console.log(`API доступно по адресу: http://localhost:${PORT}`);
-      console.log("\nДоступные endpoints:");
+      console.log("Доступные endpoints:");
       console.log("POST /auth/register - Регистрация");
       console.log("POST /auth/login - Авторизация");
       console.log("GET  /players - Список игроков");

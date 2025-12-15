@@ -1,5 +1,5 @@
 const express = require("express");
-const { Player, Team, User } = require("../models");
+const { Player, Team, User, TeamPlayer } = require("../models");
 const { authenticate } = require("../middlewares/auth");
 const { Op } = require("sequelize");
 const router = express.Router();
@@ -92,6 +92,15 @@ router.post("/", authenticate, async (req, res, next) => {
     });
 
     await team.addPlayers(players);
+
+    for (const player of players) {
+      await player.update({ is_active: false });
+
+      /*await TeamPlayer.create({
+        team_id: team_id,
+        player_id: player.id,
+      });*/
+    }
 
     const teamWithPlayers = await Team.findByPk(team.id, {
       include: [

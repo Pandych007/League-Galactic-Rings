@@ -58,7 +58,7 @@
         </div>
       </span>
       <button
-        v-if="isAuthenticated && !isInTeam && showAddButton"
+        v-if="isAuthenticated && !isInTeam && showAddButton && player.is_active"
         @click="$emit('add-to-team', player)"
         class="add-btn"
         :disabled="isAdding"
@@ -66,6 +66,9 @@
         {{ isAdd ? "Добавляется..." : "Добавить" }}
       </button>
       <span v-else-if="isInTeam" class="in-team">В команде</span>
+      <span class="other_span" v-if="!player.is_active"
+        >Игрок в другой команде</span
+      >
     </div>
   </div>
 </template>
@@ -180,5 +183,8 @@ const positionClass = computed(() => {
 .player-avatar {
   height: 280px;
   object-fit: cover;
+}
+.other_span {
+  text-align: right;
 }
 </style>

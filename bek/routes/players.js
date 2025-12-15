@@ -9,7 +9,7 @@ router.get("/", async (req, res, next) => {
     const { page = 1, limit = 20, position, search } = req.query;
 
     const offset = (page - 1) * limit;
-    const where = { is_active: true };
+    const where = {};
 
     if (position) {
       where.position = position;

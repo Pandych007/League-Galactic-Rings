@@ -252,7 +252,7 @@
             <span class="budget"
               >Бюджет:
               <div class="d-flex">
-                <div>{{ team.budget?.toLocaleString() }}</div>
+                <div>{{ team.budget }}</div>
                 <div>
                   <img
                     width="20px"
@@ -401,7 +401,12 @@ const loadTeams = async () => {
     const response = await api.get("/team");
 
     teams.value = response.data;
-    console.log(teams.value);
+    for (var j = 0; j < teams.value.length; j++) {
+      teams.value[j].budget = 0;
+      for (var i = 0; i < teams.value[j].players.length; i++) {
+        teams.value[j].budget += parseInt(teams.value[j].players[i].cost);
+      }
+    }
   } catch (error) {
     console.error("Ошибка загрузки команд:", error);
   } finally {

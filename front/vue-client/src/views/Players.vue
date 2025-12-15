@@ -219,6 +219,7 @@ const { isAuthenticated } = storeToRefs(authStore);
 
 const players = ref([]);
 const loading = ref(false);
+const existTeamVar = ref(false);
 const currentPage = ref(1);
 const totalPages = ref(1);
 const totalPlayers = ref(0);
@@ -268,6 +269,15 @@ const debSearch = () => {
 const applyFilters = () => {
   currentPage.value = 1;
   loadPlayers();
+};
+
+const existTeam = async () => {
+  const response = await api.get("/team");
+  if (response.data.length > 0) {
+    existTeamVar.value = true;
+  } else {
+    existTeamVar.value = false;
+  }
 };
 
 const loadPlayers = async () => {
@@ -397,7 +407,13 @@ const createTeam = async () => {
       name: newTeamName.value,
       playerIds: selectedPlayers.value.map((player) => player.id),
     };
+
+    if (existTeamVar.value) {
+      alert("Команда уже создана!");
+      return;
+    }
     const response = await api.post("/team", teamData);
+
     selectedPlayers.value = [];
     closeTeamCretionModal();
     alert(`Команда "${response.data.team.name}" успешно создана!"`);
@@ -411,6 +427,7 @@ const createTeam = async () => {
 
 onMounted(() => {
   loadPlayers();
+  existTeam();
 });
 
 watch(currentPage, loadPlayers);

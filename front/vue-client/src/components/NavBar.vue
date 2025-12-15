@@ -9,7 +9,7 @@
       <router-link to="/players">Игроки</router-link>
       <router-link to="/ranking">Статистика</router-link>
       <template v-if="isAuthenticated">
-        <router-link to="/teams">Мои команды</router-link>
+        <router-link to="/teams">Моя команда</router-link>
         <router-link to="/profile">Профиль</router-link>
         <button @click="logout" class="btn">Выйти ({{ user?.name }})</button>
       </template>
