@@ -23,16 +23,16 @@ async function seedDatabase() {
         password: "admin",
         role: "admin",
       },
-      {
-        name: "Ивано Петров",
-        email: "user@user.com",
-        password: "user",
-      },
-      {
-        name: "Мария Петрова",
-        email: "user1@user.com",
-        password: "user",
-      },
+      // {
+      //   name: "Ивано Петров",
+      //   email: "user@user.com",
+      //   password: "user",
+      // },
+      // {
+      //   name: "Мария Петрова",
+      //   email: "user1@user.com",
+      //   password: "user",
+      // },
     ]);
     // ВСЕ ИГРОКИ
     // const UNICS_KAZAN = [
@@ -1205,19 +1205,19 @@ async function seedDatabase() {
       },
     ]);
 
-    const team1 = await Team.create({
-      name: "asdfasf",
-      user_id: users[1].id,
-      logo: "",
-      total_points: 180.5,
-    });
+    // const team1 = await Team.create({
+    //   name: "asdfasf",
+    //   user_id: users[1].id,
+    //   logo: "",
+    //   total_points: 180.5,
+    // });
 
-    const team2 = await Team.create({
-      name: "qwe",
-      user_id: users[2].id,
-      logo: "",
-      total_points: 130.5,
-    });
+    // const team2 = await Team.create({
+    //   name: "qwe",
+    //   user_id: users[2].id,
+    //   logo: "",
+    //   total_points: 130.5,
+    // });
 
     await team1.addPlayers([players[0], players[1]]);
     await team2.addPlayers([players[2]]);

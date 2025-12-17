@@ -3,52 +3,101 @@ const { Player, Team, User, sequelize } = require("../models");
 const router = express.Router();
 
 router.get("/", async (req, res, next) => {
-  console.log("Ok");
+  const {
+    page = 1,
+    limit = 10,
+    sortBy = "total_points",
+    order = "DESC",
+  } = req.query;
 
-  const { count, rows: teams } = await Team.findAndCountAll({
+  const offset = (page - 1) * limit;
+  const orderDirection = order.toUpperCase() === "ASC" ? "ASC" : "DESC";
+
+  const { count, rows: users } = await User.findAndCountAll({
     include: [
       {
-        model: User,
-        as: "user",
-        attributes: ["id", "name"],
+        model: Team,
+        as: "teams",
+        include: [
+          {
+            model: Player,
+            as: "players",
+            through: { attributes: [] },
+            attributes: [
+              "id",
+              "name",
+              "points",
+              "rebounds",
+              "assists",
+              "fouls",
+              "steals",
+              "turnovers",
+              "blocks",
+            ],
+          },
+        ],
       },
-      {
-        model: Player,
-        as: "players",
-        through: { attributes: [] },
-        attributes: ["id"],
-      },
     ],
-    attributes: [
-      "id",
-      "name",
-      [
-        sequelize.fn(
-          "COALESCE",
-          sequelize.fn("SUM", sequelize.col("players.points")),
-          0
-        ),
-        "players_points_sum",
-      ],
-    ],
-    group: [
-      "Team.id",
-      "Team.name",
-      "user.id",
-      "user.name",
-      "players.id",
-      "points",
-      "players->TeamPlayer.team_id",
-      "players->TeamPlayer.player_id",
-    ],
-    subQuery: false,
+    where: {
+      role: "user",
+    },
+    order: [["name", "ASC"]],
+    limit: parseInt(limit),
+    offset: parseInt(offset),
   });
 
-  const ranking = teams.map((team) => {
-    //const playersPoint = team.players.reduce(
-    //  (sum, player) => sum + parseFloat(player.points || 0)
-    //);
-    console.log(team.players.players_points_sum);
+  const ranking = users.map((user) => {
+    let teamCount = 0;
+    let totalPlayers = 0;
+
+    let totalPoint = 0;
+    let totalrebounds = 0;
+    let totalassists = 0;
+    let totalfouls = 0;
+    let totalsteals = 0;
+    let totalturnovers = 0;
+    let totalblocks = 0;
+
+    user.teams.forEach((team) => {
+      teamCount++;
+      team.players.forEach((player) => {
+        totalPoint += parseFloat(player.points) || 0;
+        totalrebounds += parseFloat(player.rebounds) || 0;
+        totalassists += parseFloat(player.assists) || 0;
+        totalfouls += parseFloat(player.fouls) || 0;
+        totalsteals += parseFloat(player.steals) || 0;
+        totalturnovers += parseFloat(player.turnovers) || 0;
+        totalblocks += parseFloat(player.blocks) || 0;
+        totalPlayers++;
+      });
+    });
+
+    return {
+      user_name: user.name,
+      total_count: totalPlayers,
+      total_points: parseFloat(totalPoint.toFixed(1)),
+      total_rebounds: parseFloat(totalrebounds.toFixed(1)),
+      total_assists: parseFloat(totalassists.toFixed(1)),
+      total_fouls: parseFloat(totalfouls.toFixed(1)),
+      total_steals: parseFloat(totalsteals.toFixed(1)),
+      total_turnovers: parseFloat(totalturnovers.toFixed(1)),
+      total_blocks: parseFloat(totalblocks.toFixed(1)),
+    };
+  });
+
+  ranking.sort((a, b) => {
+    if (sortBy && a[sortBy] && b[sortBy]) {
+      return orderDirection === "DESC"
+        ? b[sortBy] - a[sortBy]
+        : a[sortBy] - b[sortBy];
+    }
+    return 0;
+  });
+  return res.json({
+    ranking,
+    totalPages: Math.ceil(count / limit),
+    currentPage: parseInt(page),
+    totalUsers: count,
   });
 });
 
