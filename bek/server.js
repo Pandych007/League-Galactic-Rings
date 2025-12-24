@@ -35,6 +35,9 @@ app.use("/players", playersRoutes);
 app.use("/team", teamsRoutes);
 app.use("/ranking", rankingRoutes);
 
+const adminRoutes = require("./routes/admin");
+app.use("/admin", adminRoutes);
+
 app.get("/", (req, res) => {
   res.json({
     message: "Добро пожаловать в API баскетбольных команд",

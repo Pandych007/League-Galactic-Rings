@@ -76,6 +76,7 @@ router.post("/login", async (req, res, next) => {
       { expiresIn: "24h" }
     );
 
+    console.log(user);
     res.json({
       message: "Успешный вход",
       token,

@@ -35,6 +35,29 @@ const routes = [
     component: () => import("../views/Profile.vue"),
     meta: { requiresAuth: true },
   },
+  {
+    path: "/admin",
+    name: "Admin",
+    component: () => import("../views/Admin.vue"),
+    meta: { requiresAuth: true, requiresAdmin: true },
+    children: [
+      {
+        path: "players",
+        name: "AdminPlayers",
+        component: () => import("../views/admin/PlayersAdmin.vue"),
+      },
+      {
+        path: "teams",
+        name: "AdminTeams",
+        component: () => import("../views/admin/TeamsAdmin.vue"),
+      },
+      {
+        path: "users",
+        name: "AdminUsers",
+        component: () => import("../views/admin/UsersAdmin.vue"),
+      },
+    ],
+  },
 ];
 
 const router = createRouter({
@@ -44,10 +67,13 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem("token");
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
 
   if (to.meta.requiresAuth && !token) {
-    next("/");
+    next("/login");
   } else if (to.meta.requiresGuest && token) {
+    next("/");
+  } else if (to.meta.requiresAdmin && user.role !== "admin") {
     next("/");
   } else {
     next();

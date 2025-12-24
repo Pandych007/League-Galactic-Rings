@@ -5,12 +5,19 @@
       <div class="logo">
         🏆 <span><router-link to="/">VirtualBasket</router-link></span>
       </div>
-
       <router-link to="/players">Игроки</router-link>
       <router-link to="/ranking">Статистика</router-link>
+
       <template v-if="isAuthenticated">
-        <router-link to="/teams">Моя команда</router-link>
-        <router-link to="/profile">Профиль</router-link>
+        <template v-if="user.role != 'admin'">
+          <router-link to="/teams">Моя команда</router-link>
+          <router-link to="/profile">Профиль</router-link>
+        </template>
+        <template v-else>
+          <router-link to="/admin/players">Управление игроками</router-link>
+          <router-link to="/admin/teams">Управление командами</router-link>
+          <router-link to="/admin/users">Управление пользователями</router-link>
+        </template>
         <button @click="logout" class="btn">Выйти ({{ user?.name }})</button>
       </template>
       <template v-else>

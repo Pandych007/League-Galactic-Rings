@@ -4,11 +4,12 @@ import api from "../services/api";
 
 export const useAuthStore = defineStore("auth", () => {
   const user = ref(JSON.parse(localStorage.getItem("user")) || null);
+  console.log(localStorage);
   const token = ref(localStorage.getItem("token") || null);
 
   const isAuthenticated = computed(() => !!token.value);
   const isAdmin = computed(() => user.value?.role === "admin");
-
+  //console.log(user.value);
   const login = async (email, password) => {
     try {
       const response = await api.post("/auth/login", {

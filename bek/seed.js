@@ -546,7 +546,7 @@ async function seedDatabase() {
         steals: 0.6,
         turnovers: 0.4,
         blocks: 0.4,
-        avatar: "/img/ZENIT/Сергей Карасев.png",
+        avatar: "/img/ZENIT/Андрей Воронцевич.png",
         cost: 30,
       },
       {
