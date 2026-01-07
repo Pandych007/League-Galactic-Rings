@@ -9,10 +9,11 @@
     <div class="avatar">
       <img
         v-if="player.avatar"
-        :src="'http://localhost:3000' + player.avatar"
+        :src="getUrl(player.avatar)"
         :alt="player.name"
         class="player-avatar"
       />
+      <!--http://localhost:3000-->
     </div>
     <div class="player-info">
       <!-- <div class="stat">
@@ -111,6 +112,14 @@ const positionClass = computed(() => {
   };
   return positions[props.player.position] || "default";
 });
+
+const getUrl = (avatar) => {
+  if (avatar.includes("http")) {
+    return `${avatar}`;
+  } else {
+    return `http://localhost:3000${avatar}`;
+  }
+};
 </script>
 
 <style scoped>
