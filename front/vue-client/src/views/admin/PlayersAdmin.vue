@@ -242,7 +242,6 @@
                       type="number"
                       v-model="playerForm.assists"
                       placeholder="0"
-                      min="0"
                       class="modal-stat-input"
                     />
                   </div>
