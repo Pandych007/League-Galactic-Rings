@@ -1,64 +1,6 @@
-<!-- <template>
-  <div class="teams-admin">
-    <div class="page-header">
-      <h2>Управление командами</h2>
-    </div>
-    <div class="teams-table-container">
-      <div v-if="loading" class="loading">Загрузка команд</div>
-      <div v-else class="table-responsive">
-        <table class="teams-table">
-          <tr>
-            <th>ID</th>
-            <th>Название команды</th>
-            <th>Создатель команды</th>
-            <th></th>
-          </tr>
-          <tr v-for="team in teams" :key="team.id">
-            <td>{{ team.id }}</td>
-            <td>{{ team.name }}</td>
-            <td></td>
-            <td>
-              <button @click="viewTeamPlayers(team)" class="players-btn">
-                Просмотреть игроков
-              </button>
-              <button
-                @click="toggleTeamStatus(team)"
-                class="action-btn status-btn"
-              >
-                {{ team.is_active ? "Деактивировать" : "Активировать" }}
-              </button>
-            </td>
-          </tr>
-        </table>
-      </div>
-    </div>
-  </div>
-</template>
-<script setup>
-import { ref, computed, onMounted, watch } from "vue";
-import api from "../../services/api";
-
-const teams = ref([]);
-const loading = ref(false);
-
-const loadTeams = async () => {
-  loading.value = true;
-  try {
-    const response = await api.get("/team/admin/getAllTeams");
-    teams.value = response.data.teams || response.data;
-    console.log(teams.value);
-  } catch (error) {
-    console.error(error);
-  } finally {
-    loading.value = false;
-  }
-};
-
-onMounted(() => {
-  loadTeams();
-});
-</script> -->
-
+<!-- 
+ОШИБКА В Управление игроками  СТАТИСТИКА ПОТЕРИ ВЫДАЕТ NAN и не 
+меняется если ее изменить. если изменить другого игрока то тоже будет NaN -->
 <template>
   <div class="teams-admin">
     <div class="page-header">
