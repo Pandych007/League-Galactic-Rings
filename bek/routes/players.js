@@ -104,7 +104,6 @@ router.put("/:id", authenticate, authorize("admin"), async (req, res, next) => {
 
     const {
       name,
-      position,
       avatar,
       cost,
       points,
@@ -116,10 +115,8 @@ router.put("/:id", authenticate, authorize("admin"), async (req, res, next) => {
       blocks,
       is_active,
     } = req.body;
-
     await player.update({
       name: name || player.name,
-      position: position || player.position,
       avatar: avatar || player.avatar,
       cost: cost !== undefined ? parseFloat(cost) : player.cost,
       points: points !== undefined ? parseFloat(points) : player.points,
@@ -127,8 +124,7 @@ router.put("/:id", authenticate, authorize("admin"), async (req, res, next) => {
       assists: assists !== undefined ? parseFloat(assists) : player.assists,
       fouls: fouls !== undefined ? parseFloat(fouls) : player.fouls,
       steals: steals !== undefined ? parseFloat(steals) : player.steals,
-      turnovers:
-        turnovers !== undefined ? parseFloat(turnoverst) : player.turnoverst,
+      turnovers: parseFloat(player.turnoverst),
       blocks: blocks !== undefined ? parseFloat(blocks) : player.blocks,
       is_active: is_active !== undefined ? is_active : player.is_active,
     });

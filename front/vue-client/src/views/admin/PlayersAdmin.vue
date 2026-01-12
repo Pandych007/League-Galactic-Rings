@@ -94,7 +94,7 @@
                 </div>
 
                 <div class="modal-form-row">
-                  <div class="modal-input-group">
+                  <div v-if="!editingPlayer" class="modal-input-group">
                     <label class="modal-input-label">
                       <span class="label-text">Позиция</span>
                       <span class="required-asterisk">*</span>
@@ -104,6 +104,7 @@
                         v-model="playerForm.position"
                         required
                         class="modal-select"
+                        id="editPosition"
                       >
                         <option value="">Все Позиции</option>
                         <option value="PG">Разыгрывающий защитник</option>
@@ -542,9 +543,9 @@ const validateForm = () => {
     errors.value.name = "Имя игрока обязательно";
   }
 
-  if (!playerForm.value.position) {
+  /*if (!playerForm.value.position) {
     errors.value.position = "Выберите позицию";
-  }
+  }*/
 
   if (!playerForm.value.cost && playerForm.value.cost !== 0) {
     errors.value.cost = "Стоимость игрока обязательна";
@@ -629,9 +630,12 @@ const closeForm = () => {
 };
 const editPlayer = (player) => {
   editingPlayer.value = player;
+
+  //select.value = player.position;
+
   playerForm.value = {
     name: player.name,
-    position: player.position,
+    //position: player.position,
     cost: player.cost,
     is_active: player.is_active,
     avatar: player.avatar,

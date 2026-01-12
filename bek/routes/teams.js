@@ -1,6 +1,6 @@
 const express = require("express");
 const { Player, Team, User, TeamPlayer } = require("../models");
-const { authenticate } = require("../middlewares/auth");
+const { authenticate, authorize } = require("../middlewares/auth");
 const { Op } = require("sequelize");
 const router = express.Router();
 
@@ -121,5 +121,28 @@ router.post("/", authenticate, async (req, res, next) => {
     next(error);
   }
 });
+
+//для админа получить все команды
+router.get(
+  "/admin/getAllTeams",
+  authenticate,
+  authorize("admin"),
+  async (req, res, next) => {
+    try {
+      const teams = await Team.findAll();
+      /*teams_array = [];
+      for(const i = 0; i < teams.length; i++){
+        const user = await User.findAll({
+          where: { user_id: req.user.id }
+        })
+      }*/
+
+      res.json(teams);
+    } catch (error) {
+      console.log(error);
+      next(next);
+    }
+  }
+);
 
 module.exports = router;
