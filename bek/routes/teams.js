@@ -11,6 +11,7 @@ router.get("/", authenticate, async (req, res, next) => {
       include: [
         {
           model: Player,
+          where: { is_active: false },
           as: "players",
           through: { attributes: [] },
           attributes: [
@@ -129,13 +130,21 @@ router.get(
   authorize("admin"),
   async (req, res, next) => {
     try {
-      const teams = await Team.findAll();
-      /*teams_array = [];
-      for(const i = 0; i < teams.length; i++){
-        const user = await User.findAll({
-          where: { user_id: req.user.id }
-        })
-      }*/
+      const teams = await Team.findAll({
+        include: [
+          {
+            model: User,
+            as: "user",
+            attributes: ["id", "name", "email"],
+          },
+          {
+            model: Player,
+            as: "players",
+            through: { attributes: [] },
+            attributes: ["id", "name", "cost", "avatar"],
+          },
+        ],
+      });
 
       res.json(teams);
     } catch (error) {

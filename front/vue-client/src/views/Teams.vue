@@ -279,7 +279,7 @@
               <div class="player-info">
                 <img
                   v-if="player.avatar"
-                  :src="'http://localhost:3000' + player.avatar"
+                  :src="getUrl(player.avatar)"
                   :alt="player.name"
                   class="player-avatar"
                 />
@@ -547,6 +547,14 @@ watch(showTeamForm, (newVal) => {
     loadAvailablePlayers();
   }
 });
+
+const getUrl = (avatar) => {
+  if (avatar.includes("http")) {
+    return `${avatar}`;
+  } else {
+    return `http://localhost:3000${avatar}`;
+  }
+};
 </script>
 
 <style scoped>

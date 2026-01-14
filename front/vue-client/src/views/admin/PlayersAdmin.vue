@@ -390,12 +390,7 @@
                 <button @click="editPlayer(player)" class="action-btn edit-btn">
                   Редактировать
                 </button>
-                <button
-                  @click="togglePlayerStatus(player)"
-                  class="action-btn status-btn"
-                >
-                  {{ player.is_active ? "Деактивировать" : "Активировать" }}
-                </button>
+
                 <button
                   @click="deletePlayer(player)"
                   class="action-btn delete-btn"
@@ -564,6 +559,7 @@ const savePlayer = async () => {
     const playerData = { ...playerForm.value };
     if (editingPlayer.value) {
       // Редактирование
+      console.log(playerData);
       await api.put(`/players/${editingPlayer.value.id}`, playerData);
       alert("Игрок успешно обновлен");
     } else {

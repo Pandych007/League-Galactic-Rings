@@ -124,7 +124,8 @@ router.put("/:id", authenticate, authorize("admin"), async (req, res, next) => {
       assists: assists !== undefined ? parseFloat(assists) : player.assists,
       fouls: fouls !== undefined ? parseFloat(fouls) : player.fouls,
       steals: steals !== undefined ? parseFloat(steals) : player.steals,
-      turnovers: parseFloat(player.turnoverst),
+      turnovers:
+        turnovers !== undefined ? parseFloat(turnovers) : player.turnovers,
       blocks: blocks !== undefined ? parseFloat(blocks) : player.blocks,
       is_active: is_active !== undefined ? is_active : player.is_active,
     });
