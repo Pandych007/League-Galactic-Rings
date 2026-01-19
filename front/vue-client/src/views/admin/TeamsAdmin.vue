@@ -1,31 +1,25 @@
-<!-- исправить 14.01.26
- 1 ОШИБКА В Управление игроками  СТАТИСТИКА ПОТЕРИ ВЫДАЕТ NAN и не 
- меняется если ее изменить. если изменить другого игрока то тоже будет NaN 
- 2 исправить ошибку если админ деактивирует 
- игрока то он пропадает из команды игрока который его купил
- 3 посмотреть почему нет фото когда 
- новый игрок ( добавленный в ручную) в команде  -->
 <template>
   <div class="modal-players" v-if="pleyersModal">
     <button @click="closeModal">x</button>
     <h2>Игроки</h2>
     <table>
       <tr v-for="p in playersModalArray" :key="p.id">
-        <td>{{ p.name }}</td>
         <td>
           <div v-if="p.avatar">
             <img :src="getUrl(p.avatar)" width="150px" />
           </div>
         </td>
-        <td>
+        <td>{{ p.name }}</td>
+
+        <td class="color_blak">
           {{ p.cost }}
+          <img
+            data-v-2a3aebcb=""
+            src="http://localhost:3000/img/basket-coin.png"
+            width="24px"
+            alt=""
+          />
         </td>
-        <img
-          data-v-2a3aebcb=""
-          src="http://localhost:3000/img/basket-coin.png"
-          width="24px"
-          alt=""
-        />
       </tr>
     </table>
   </div>
@@ -85,10 +79,11 @@
                 <td class="cell-creator">
                   <div class="creator-placeholder">
                     <i class="creator-icon">👤</i>
-                    <span class="placeholder-text"
-                      >{{ team.user.name }}<br />
-                      {{ team.user.email }}</span
-                    >
+                    <span v-if="team.user" class="placeholder-text">
+                      {{ team.user.name }}<br />
+                      {{ team.user.email }}
+                    </span>
+                    <span v-else> Пользователь заблокирован </span>
                   </div>
                 </td>
                 <td class="cell-actions">
@@ -637,23 +632,23 @@ const getUrl = (avatar) => {
 }
 
 /* Заголовок таблицы */
-.modal-players > table::before {
+/* .modal-players > table::before {
   content: "";
   display: block;
   background: #f8fafc;
   height: 60px;
   border-bottom: 2px solid #e2e8f0;
-}
+} */
 
 .modal-players > table thead {
-  position: sticky;
+  /* position: sticky; */
   top: 0;
   z-index: 5;
   background: #f8fafc;
 }
 
 .modal-players > table tr:first-child {
-  position: sticky;
+  /*position: sticky;*/
   top: 0;
   background: #f8fafc;
   z-index: 5;
@@ -685,7 +680,7 @@ const getUrl = (avatar) => {
 }
 
 /* Колонка с именем */
-.modal-players > table td:first-child {
+.modal-players > table td:nth-child(2) {
   font-weight: 600;
   color: #1e293b;
   font-size: 16px;
@@ -693,16 +688,16 @@ const getUrl = (avatar) => {
 }
 
 /* Колонка с аватаром */
-.modal-players > table td:nth-child(2) {
+.modal-players > table td:nth-child(1) {
   text-align: center;
   min-width: 180px;
 }
 
-.modal-players > table td:nth-child(2) div {
+.modal-players > table td:nth-child(1) div {
   display: inline-block;
 }
 
-.modal-players > table td:nth-child(2) img {
+.modal-players > table td:nth-child(1) img {
   width: 80px;
   height: 80px;
   border-radius: 50%;
@@ -712,7 +707,7 @@ const getUrl = (avatar) => {
   transition: transform 0.3s ease;
 }
 
-.modal-players > table td:nth-child(2) img:hover {
+.modal-players > table td:nth-child(1) img:hover {
   transform: scale(1.05);
 }
 
@@ -722,14 +717,14 @@ const getUrl = (avatar) => {
   font-weight: 700;
   color: #10b981;
   font-size: 18px;
-  min-width: 120px;
+  min-width: 266px;
 }
 
-.modal-players > table td:last-child::after {
+/* .modal-players > table td:last-child::after {
   content: " ₽";
   font-size: 16px;
   opacity: 0.8;
-}
+} */
 
 /* Полоса прокрутки */
 .modal-players > table::-webkit-scrollbar {
@@ -760,7 +755,9 @@ const getUrl = (avatar) => {
   font-size: 16px;
   font-weight: 500;
 }
-
+.color_blak {
+  color: black;
+}
 /* Адаптивность */
 @media (max-width: 768px) {
   .modal-players {

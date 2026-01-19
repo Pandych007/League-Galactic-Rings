@@ -1,5 +1,5 @@
 const express = require("express");
-const { Player, Team } = require("../models");
+const { Player, Team, User } = require("../models");
 const { authenticate, authorize } = require("../middlewares/auth");
 const router = express.Router();
 const { Op } = require("sequelize");
@@ -168,6 +168,45 @@ router.delete(
 
       await team.destroy();
       res.status(204).send();
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+// /admin/deleteUser для админа
+router.delete(
+  "/deleteUser/:id",
+  authenticate,
+  authorize("admin"),
+  async (req, res, next) => {
+    try {
+      const user = await User.findByPk(req.params.id);
+
+      if (!user) {
+        return res.status(404).json({ error: "Пользователь не найдена" });
+      }
+
+      await user.destroy();
+      res.status(204).send();
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+// /admin/getAllUsers для админа
+router.get(
+  "/getAllUsers",
+  authenticate,
+  authorize("admin"),
+  async (req, res, next) => {
+    try {
+      const users = await User.findAll();
+
+      res.json({
+        users: users,
+      });
     } catch (error) {
       next(error);
     }

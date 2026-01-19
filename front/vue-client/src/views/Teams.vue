@@ -167,10 +167,10 @@
                   </div>
 
                   <div class="player-stats">
-                    <div class="stat">
+                    <!-- <div class="stat">
                       <span class="label">Рост:</span>
                       <span class="value">{{ player.height }}м</span>
-                    </div>
+                    </div> -->
                     <div class="stat">
                       <span class="label">Очки:</span>
                       <span class="value">{{ player.points }}</span>

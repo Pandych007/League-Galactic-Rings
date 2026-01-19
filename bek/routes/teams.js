@@ -136,12 +136,14 @@ router.get(
             model: User,
             as: "user",
             attributes: ["id", "name", "email"],
+            required: false,
           },
           {
             model: Player,
             as: "players",
             through: { attributes: [] },
             attributes: ["id", "name", "cost", "avatar"],
+            required: false,
           },
         ],
       });

@@ -16,24 +16,24 @@ async function seedDatabase() {
     await Player.destroy({ where: {} });
     await User.destroy({ where: {} });
 
-    const users = await User.bulkCreate([
-      {
-        name: "Admin",
-        email: "admin@admin.com",
-        password: "admin",
-        role: "admin",
-      },
-      // {
-      //   name: "Ивано Петров",
-      //   email: "user@user.com",
-      //   password: "user",
-      // },
-      // {
-      //   name: "Мария Петрова",
-      //   email: "user1@user.com",
-      //   password: "user",
-      // },
-    ]);
+    // const users = await User.bulkCreate([
+    //   {
+    //     name: "Admin",
+    //     email: "admin@admin.com",
+    //     password: "admin",
+    //     role: "admin",
+    //   },
+    // {
+    //   name: "Ивано Петров",
+    //   email: "user@user.com",
+    //   password: "user",
+    // },
+    // {
+    //   name: "Мария Петрова",
+    //   email: "user1@user.com",
+    //   password: "user",
+    // },
+    // ]);
     // ВСЕ ИГРОКИ
     // const UNICS_KAZAN = [
     //   { name: 'Маркос Найт', points: 16.1, rebounds: 4.1, assists: 4.0, fouls: 2.4, steals: 1.6, turnovers: 2.1, blocks: 0.1, avatar: "/img/UNIKS/Маркос Найт.png", cost: 70 },
