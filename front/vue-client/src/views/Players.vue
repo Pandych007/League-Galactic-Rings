@@ -211,11 +211,14 @@ import PlayerCard from "../components/PlayerCard.vue";
 import api from "../services/api";
 import { useRouter } from "vue-router";
 
-const BUDGET_LIMIT = 300;
-
 const authStore = useAuthStore();
-const router = useRouter();
-const { isAuthenticated } = storeToRefs(authStore);
+
+const { user, token } = storeToRefs(authStore);
+const isAuthenticated = computed(() => !!token.value);
+//const router = useRouter();
+//const { isAuthenticated } = storeToRefs(authStore);
+console.log(user);
+const BUDGET_LIMIT = user.budget;
 
 const players = ref([]);
 const loading = ref(false);
@@ -244,7 +247,7 @@ const selectedPlayersCount = computed(() => selectedPlayers.value.length);
 const totalSelectionCost = computed(() => {
   return selectedPlayers.value.reduce(
     (sum, player) => sum + parseFloat(player.cost || 0),
-    0
+    0,
   );
 });
 const canCreateTeam = computed(() => {
@@ -344,7 +347,7 @@ const addToTeam = async (player) => {
 
 const removeFromSelection = (player) => {
   selectedPlayers.value = selectedPlayers.value.filter(
-    (p) => p.id !== player.id
+    (p) => p.id !== player.id,
   );
 };
 

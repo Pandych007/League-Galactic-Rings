@@ -95,6 +95,7 @@
                       <i class="btn-icon">👥</i>
                       <span class="btn-text">Игроки</span>
                     </button>
+                    <button @click="deleteTeam(team)">Удалить</button>
                   </div>
                 </td>
               </tr>
@@ -141,6 +142,22 @@ const viewTeamPlayers = (team) => {
   //console.log(team);
   pleyersModal.value = true;
   playersModalArray = team.players;
+};
+
+const deleteTeam = async (team) => {
+  if (!confirm(`Вы уверены, что хотите удалить команду ${team.name}?`)) {
+    return;
+  }
+
+  loading.value = true;
+  try {
+    const response = await api.delete(`/admin/teams/${team.id}`);
+    loadTeams();
+  } catch (error) {
+    console.error(error);
+  } finally {
+    loading.value = false;
+  }
 };
 
 onMounted(() => {

@@ -27,6 +27,21 @@
       </template>
     </div>
   </header>
+  <div
+    v-if="isAuthenticated && user.role != 'admin' && $route.path != '/'"
+    class="nav-budget"
+  >
+    <div>
+      {{ user?.budget }}
+    </div>
+    <div>
+      <img
+        width="20px"
+        height="20px"
+        src="http://localhost:3000/img/basket-coin.png"
+      />
+    </div>
+  </div>
 </template>
 <script setup>
 import { useAuthStore } from "../stores/auth";
@@ -38,7 +53,6 @@ const authStore = useAuthStore();
 const router = useRouter();
 
 const { user, token } = storeToRefs(authStore);
-
 const isAuthenticated = computed(() => !!token.value);
 
 const forceUpdate = ref(0);
@@ -53,4 +67,11 @@ watch(token, () => {
   forceUpdate.value++;
 });
 </script>
-<style scoped></style>
+<style scoped>
+.nav-budget {
+  display: flex;
+  justify-content: right;
+  padding: 20px;
+  gap: 10px;
+}
+</style>

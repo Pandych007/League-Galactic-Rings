@@ -59,7 +59,7 @@ router.get(
     } catch (error) {
       next(error);
     }
-  }
+  },
 );
 //GET /admin/users
 router.get(
@@ -97,7 +97,7 @@ router.get(
     } catch (error) {
       next(error);
     }
-  }
+  },
 );
 //GET /admin/teams
 router.get(
@@ -151,7 +151,7 @@ router.get(
     } catch (error) {
       next(error);
     }
-  }
+  },
 );
 // /admin/teams/:id
 router.delete(
@@ -160,10 +160,32 @@ router.delete(
   authorize("admin"),
   async (req, res, next) => {
     try {
-      const team = await Team.findByPk(req.params.id);
+      const team = await Team.findByPk(req.params.id, {
+        include: [
+          {
+            model: Player,
+            as: "players",
+            through: { attributes: [] },
+          },
+        ],
+      });
 
       if (!team) {
         return res.status(404).json({ error: "Команда не найдена" });
+      }
+
+      const playerIds = team.players.map((player) => player.id);
+      if (playerIds.length > 0) {
+        await Player.update(
+          { is_active: true },
+          {
+            where: {
+              id: {
+                [Op.in]: playerIds,
+              },
+            },
+          },
+        );
       }
 
       await team.destroy();
@@ -171,7 +193,7 @@ router.delete(
     } catch (error) {
       next(error);
     }
-  }
+  },
 );
 
 // /admin/deleteUser для админа
@@ -192,7 +214,7 @@ router.delete(
     } catch (error) {
       next(error);
     }
-  }
+  },
 );
 
 // /admin/getAllUsers для админа
@@ -210,7 +232,7 @@ router.get(
     } catch (error) {
       next(error);
     }
-  }
+  },
 );
 
 module.exports = router;

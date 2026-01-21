@@ -36,6 +36,10 @@ const User = sequelize.define(
       type: DataTypes.ENUM("user", "admin"),
       defaultValue: "user",
     },
+    budget: {
+      type: DataTypes.INTEGER,
+      defaultValue: 300,
+    },
   },
   {
     tableName: "users",
@@ -50,7 +54,7 @@ const User = sequelize.define(
         }
       },
     },
-  }
+  },
 );
 
 User.prototype.validatePassword = function (password) {
