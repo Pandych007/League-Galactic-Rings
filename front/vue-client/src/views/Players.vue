@@ -213,13 +213,10 @@ import { useRouter } from "vue-router";
 
 const authStore = useAuthStore();
 
-const { user, token } = storeToRefs(authStore);
-const isAuthenticated = computed(() => !!token.value);
-//const router = useRouter();
-//const { isAuthenticated } = storeToRefs(authStore);
-console.log(user);
-const BUDGET_LIMIT = user.budget;
+const { isAuthenticated } = storeToRefs(authStore);
 
+const BUDGET_LIMIT = ref(0);
+const user = ref(null);
 const players = ref([]);
 const loading = ref(false);
 const existTeamVar = ref(false);
@@ -255,7 +252,7 @@ const canCreateTeam = computed(() => {
     newTeamName.value.trim() &&
     selectedPlayersCount.value > 0 &&
     selectedPlayersCount.value <= 7 &&
-    totalSelectionCost.value <= BUDGET_LIMIT
+    totalSelectionCost.value <= BUDGET_LIMIT.value
   );
 });
 
@@ -334,7 +331,7 @@ const addToTeam = async (player) => {
     return;
   }
 
-  if (totalSelectionCost.value + parseFloat(player.cost) > BUDGET_LIMIT) {
+  if (totalSelectionCost.value + parseFloat(player.cost) > BUDGET_LIMIT.value) {
     alert("Error");
     return;
   }
@@ -365,6 +362,20 @@ const createTeamWithSelected = () => {
     return;
   }
   showTeamCreationModal.value = true;
+};
+
+const loadUserData = async () => {
+  loading.value = true;
+  try {
+    const userResponse = await api.get("/auth/me");
+    user.value = userResponse.data.user;
+    BUDGET_LIMIT.value = user.value.budget;
+    //console.log(BUDGET_LIMIT);
+  } catch (error) {
+    console.error(error);
+  } finally {
+    loading.value = false;
+  }
 };
 
 const closeTeamCretionModal = () => {
@@ -409,6 +420,8 @@ const createTeam = async () => {
     const teamData = {
       name: newTeamName.value,
       playerIds: selectedPlayers.value.map((player) => player.id),
+      ostatok: BUDGET_LIMIT.value - totalSelectionCost.value,
+      budget: BUDGET_LIMIT.value,
     };
 
     if (existTeamVar.value) {
@@ -416,11 +429,12 @@ const createTeam = async () => {
       return;
     }
     const response = await api.post("/team", teamData);
-
+    loadUserData();
     selectedPlayers.value = [];
     closeTeamCretionModal();
     alert(`Команда "${response.data.team.name}" успешно создана!"`);
-    router.push("/teams");
+    window.location.href = "/teams";
+    //router.push("/teams");
   } catch (error) {
     console.error(error);
   } finally {
@@ -431,6 +445,7 @@ const createTeam = async () => {
 onMounted(() => {
   loadPlayers();
   existTeam();
+  loadUserData();
 });
 
 watch(currentPage, loadPlayers);

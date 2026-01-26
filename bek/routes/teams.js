@@ -42,8 +42,10 @@ router.get("/", authenticate, async (req, res, next) => {
 
 router.post("/", authenticate, async (req, res, next) => {
   try {
-    const { name, logo, playerIds } = req.body;
+    const { name, logo, playerIds, ostatok, budget } = req.body;
     const userId = req.user.id;
+
+    //const userId = req.user.id;
     if (!name || !playerIds || !Array.isArray(playerIds)) {
       return res.status(400).json({
         error: "Название команды и список игроков обязвтельны",
@@ -71,9 +73,9 @@ router.post("/", authenticate, async (req, res, next) => {
 
     const totalCost = players.reduce(
       (sum, player) => sum + parseFloat(player.cost),
-      0
+      0,
     );
-    const BUDGET_LIMIT = 300;
+    const BUDGET_LIMIT = budget;
 
     if (totalCost > BUDGET_LIMIT) {
       return res.status(400).json({
@@ -83,7 +85,7 @@ router.post("/", authenticate, async (req, res, next) => {
 
     const totalPoints = players.reduce(
       (sum, player) => sum + parseFloat(player.points),
-      0
+      0,
     );
     const team = await Team.create({
       name,
@@ -112,6 +114,11 @@ router.post("/", authenticate, async (req, res, next) => {
         },
       ],
     });
+
+    const user = await User.findByPk(userId);
+
+    await user.update({ budget: ostatok });
+
     res.status(201).json({
       message: "Команда успешно создана",
       team: teamWithPlayers,
@@ -153,7 +160,7 @@ router.get(
       console.log(error);
       next(next);
     }
-  }
+  },
 );
 
 module.exports = router;

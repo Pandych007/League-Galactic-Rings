@@ -32,7 +32,7 @@
     class="nav-budget"
   >
     <div>
-      {{ user?.budget }}
+      {{ BUDGET_LIMIT }}
     </div>
     <div>
       <img
@@ -44,6 +44,7 @@
   </div>
 </template>
 <script setup>
+import api from "../services/api";
 import { useAuthStore } from "../stores/auth";
 import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
@@ -51,10 +52,12 @@ import { computed, onMounted, ref, watch } from "vue";
 
 const authStore = useAuthStore();
 const router = useRouter();
-
+const loading = ref(false);
+const user_data = ref(null);
 const { user, token } = storeToRefs(authStore);
 const isAuthenticated = computed(() => !!token.value);
-
+const BUDGET_LIMIT = ref(0);
+//let BUDGET_LIMIT = 0;
 const forceUpdate = ref(0);
 
 const logout = () => {
@@ -62,6 +65,23 @@ const logout = () => {
   forceUpdate.value++;
   router.push("/");
 };
+
+const loadUserData = async () => {
+  loading.value = true;
+  try {
+    const userResponse = await api.get("/auth/me");
+    user_data.value = userResponse.data.user;
+    BUDGET_LIMIT.value = user_data.value.budget;
+  } catch (error) {
+    console.error(error);
+  } finally {
+    loading.value = false;
+  }
+};
+
+onMounted(() => {
+  loadUserData();
+});
 
 watch(token, () => {
   forceUpdate.value++;
