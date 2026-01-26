@@ -83,7 +83,7 @@
                       {{ team.user.name }}<br />
                       {{ team.user.email }}
                     </span>
-                    <span v-else> Пользователь заблокирован </span>
+                    <span v-else> Пользователь заблокирован!</span>
                   </div>
                 </td>
                 <td class="cell-actions">
