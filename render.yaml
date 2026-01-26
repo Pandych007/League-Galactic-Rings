@@ -1,6 +1,1 @@
-services:
-  - type: web
-    name: league-galactic-rings
-    env: static
-    buildCommand: npm install && npm run build
-    staticPublishPath: dist
+
