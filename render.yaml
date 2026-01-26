@@ -1,1 +1,7 @@
-A render.yaml file was found, but there was an issue.
+services:
+  - type: web
+    name: league-galactic-rings
+    env: static
+    plan: free
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
