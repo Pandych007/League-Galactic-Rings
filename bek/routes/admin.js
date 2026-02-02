@@ -235,4 +235,33 @@ router.get(
   },
 );
 
+router.get(
+  "/changeBalanceUser",
+  authenticate,
+  authorize("admin"),
+  async (req, res, next) => {
+    const { user_id, balance } = req.query;
+
+    const user = await User.findByPk(user_id);
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "Пользователь не найден",
+      });
+    }
+
+    user.budget = balance;
+    user.save();
+
+    try {
+      res.json({
+        success: true,
+        message: "Баланс у пользователя изменен",
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
 module.exports = router;

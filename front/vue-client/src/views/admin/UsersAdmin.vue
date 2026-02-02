@@ -1,4 +1,23 @@
 <template>
+  <div v-if="modalBalance" class="modal-change-balance">
+    <div>
+      <a @click="closeModal">X</a>
+    </div>
+    <div class="modal-change-header">
+      <h2>Изменить баланс</h2>
+    </div>
+    <div>
+      <form @submit.prevent="handleChangeBalance">
+        <div>
+          <label>Баланс: </label>
+          <input v-model="balance" />
+        </div>
+        <div>
+          <button type="button" @click="changeBalanceClick">Изменить</button>
+        </div>
+      </form>
+    </div>
+  </div>
   <div class="users-management-container">
     <div class="management-header">
       <h2 class="management-title">
@@ -115,6 +134,14 @@
               </svg>
               <span class="delete-text">Удалить</span>
             </button>
+            <br />
+            <button
+              @click="changeBalance(user)"
+              class="change-button"
+              :disabled="loading"
+            >
+              Изменить баланс
+            </button>
           </div>
         </div>
       </div>
@@ -147,8 +174,11 @@
 <script setup>
 import { ref, computed, onMounted, watch } from "vue";
 import api from "../../services/api";
+const balance = ref(0);
 const users = ref([]);
 const loading = ref(false);
+const modalBalance = ref(false);
+const user_id = ref(0);
 
 const loadUsers = async () => {
   loading.value = true;
@@ -161,6 +191,37 @@ const loadUsers = async () => {
   } finally {
     loading.value = false;
   }
+};
+
+const changeBalance = async (user) => {
+  user_id.value = user.id;
+  modalBalance.value = true;
+  balance.value = user.budget;
+};
+
+const changeBalanceClick = async () => {
+  const data = {
+    user_id: user_id.value,
+    balance: balance.value,
+  };
+  loading.value = true;
+  try {
+    const response = await api.get(`/admin/changeBalanceUser`, {
+      params: data,
+    });
+    if (response.data.success) {
+      modalBalance.value = false;
+      loadUsers();
+    }
+  } catch (error) {
+    console.error(error);
+  } finally {
+    loading.value = false;
+  }
+};
+
+const closeModal = async () => {
+  modalBalance.value = false;
 };
 
 const deleteUser = async (user) => {
@@ -531,5 +592,9 @@ onMounted(() => {
     align-items: flex-start;
     gap: 10px;
   }
+}
+
+.cell-actions {
+  flex-direction: column;
 }
 </style>
