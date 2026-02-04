@@ -119,6 +119,27 @@
             VirtualBasket — система управления виртуальными баскетбольными
             командами
           </p>
+          <p class="copyright-notice">
+            Изображения представлены в соответствии с требованиями
+            правообладателей
+          </p>
+          <div class="teams_offichial">
+            <p>
+              <a href="https://cskabasket.ru/" class="official-link">ЦСКА</a>
+            </p>
+            <p>
+              <a href="https://bc-zenit.com/" class="official-link">Зенит</a>
+            </p>
+            <p>
+              <a href="https://www.unics.ru/" class="official-link">УНИКС</a>
+            </p>
+            <p>
+              <a href="https://lokobasket.com/" class="official-link"
+                >Локомотив-Кубань</a
+              >
+            </p>
+          </div>
+
           <p class="copyright">© 2025 VirtualBasket</p>
         </div>
       </div>
@@ -287,6 +308,29 @@ h2 {
 .btn--outline {
   background: #ff7b00;
   padding: 10px 20px;
+}
+
+.copyright-notice {
+  color: #e0e0e0;
+  font-size: 0.9em;
+  margin-bottom: 10px;
+  font-style: italic;
+}
+
+.official-link {
+  color: inherit; /* Наследует цвет родителя */
+  text-decoration: none; /* Убирает подчеркивание */
+  transition: opacity 0.3s ease; /* Плавное изменение прозрачности */
+}
+
+.official-link:hover {
+  opacity: 0.7; /* Эффект при наведении */
+  text-decoration: none; /* Гарантируем, что подчеркивание не появится */
+}
+
+/* Дополнительно: если нужно, чтобы ссылки выглядели как обычный текст, но были кликабельны */
+.teams_offichial p {
+  margin: 5px 0;
 }
 </style>
 

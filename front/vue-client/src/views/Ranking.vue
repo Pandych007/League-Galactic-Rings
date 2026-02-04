@@ -1,5 +1,7 @@
 <template>
   <div class="container">
+    <Timer />
+
     <h2 align="center">Статистика команд</h2>
 
     <!-- Показать индикатор загрузки -->
@@ -259,9 +261,13 @@
 <script>
 import { ref, onMounted, computed } from "vue";
 import axios from "axios";
+import Timer from "../components/TImer.vue";
 
 export default {
   name: "Ranking",
+  components: {
+    Timer,
+  },
   setup() {
     // Реактивные переменные состояния
     const loading = ref(false); // Индикатор загрузки
@@ -272,6 +278,7 @@ export default {
     const sortBy = ref("total_points"); // Поле для сортировки
     const order = ref("DESC"); // Порядок сортировки
     const limit = ref(10); // Количество записей на странице
+    const currentTime = ref(new Date().toLocaleTimeString("ru-RU"));
 
     const API_URL = "http://localhost:3000"; // Базовый URL API
 
@@ -441,7 +448,7 @@ export default {
     // Вычисляемое свойство: сортировка команд по результату (по убыванию)
     const sortedRanking = computed(() => {
       return [...calculateResults.value].sort(
-        (a, b) => b.resultScore - a.resultScore
+        (a, b) => b.resultScore - a.resultScore,
       );
     });
 
@@ -456,7 +463,7 @@ export default {
       if (sortedRanking.value.length === 0 || maxResultScore.value === 0)
         return [];
       return sortedRanking.value.filter(
-        (team) => team.resultScore === maxResultScore.value
+        (team) => team.resultScore === maxResultScore.value,
       );
     });
 
@@ -501,6 +508,9 @@ export default {
     // Хук жизненного цикла: выполняется при монтировании компонента
     onMounted(() => {
       loadRanking();
+      setInterval(() => {
+        currentTime.value = new Date().toLocaleTimeString("ru-RU");
+      }, 1000);
     });
 
     return {
@@ -524,6 +534,7 @@ export default {
       tieTeams,
       isTieParticipant,
       changePage,
+      currentTime,
     };
   },
 };
