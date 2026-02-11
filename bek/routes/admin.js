@@ -263,5 +263,67 @@ router.get(
     }
   },
 );
+router.get(
+  "/clearTeams",
+  authenticate,
+  authorize("admin"),
+  async (req, res, next) => {
+    try {
+      const teams = await Team.findAll({
+        include: [
+          {
+            model: Player,
+            as: "players",
+            through: { attributes: [] },
+          },
+        ],
+      });
+
+      if (teams.length === 0) {
+        return res.json({
+          success: true,
+          message: "Нет команд для удаления",
+          deletedTeams: 0,
+        });
+      }
+
+      let deletedCount = 0;
+      let playersUpdated = 0;
+
+      for (const team of teams) {
+        const playerIds = team.players.map((player) => player.id);
+
+        if (playerIds.length > 0) {
+          const [updated] = await Player.update(
+            { is_active: true },
+            {
+              where: {
+                id: {
+                  [Op.in]: playerIds,
+                },
+              },
+            },
+          );
+          playersUpdated += updated;
+
+          await team.setPlayers([]);
+        }
+
+        await team.destroy();
+        deletedCount++;
+      }
+
+      res.json({
+        success: true,
+        message: "Все команды успешно удалены",
+        deletedTeams: deletedCount,
+        playersUpdated: playersUpdated,
+      });
+    } catch (error) {
+      console.error("Ошибка при удалении команд:", error);
+      next(error);
+    }
+  },
+);
 
 module.exports = router;

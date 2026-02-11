@@ -43,7 +43,11 @@
 
 <script setup>
 //admin/time1
+import { redirect } from "react-router-dom";
+import api from "../services/api";
 import { ref, onMounted, computed, onUnmounted } from "vue";
+import { useRouter } from "vue-router";
+const router = useRouter();
 
 const props = defineProps({
   startDate: {
@@ -60,7 +64,8 @@ const now = ref(new Date());
 const timerInterval = ref(null);
 
 const RESET_INTERVAL = computed(
-  () => props.resetIntervalDays * 24 * 60 * 60 * 1000,
+  // 60
+  () => props.resetIntervalDays * 2 * 60 * 1000, // * 24
 );
 
 const timeUntilReset = computed(() => {
@@ -95,7 +100,29 @@ const progressPercent = computed(() => {
 });
 
 const updateNow = () => {
+  //console.log(1);
+  //
+  if (
+    days.value == 0 &&
+    hours.value == 0 &&
+    minutes.value == 0 &&
+    seconds.value == 0
+  ) {
+    clearAllTeams();
+  }
   now.value = new Date();
+};
+
+const clearAllTeams = async () => {
+  //const token = localStorage.getItem('token');
+  try {
+    const response = await api.get("/admin/clearTeams");
+    if (response.data.success) {
+      await router.push("/ranking");
+    }
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 onMounted(() => {
