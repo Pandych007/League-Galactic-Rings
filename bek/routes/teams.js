@@ -129,6 +129,45 @@ router.post("/", authenticate, async (req, res, next) => {
     next(error);
   }
 });
+// получение инроков по нику пользователя
+router.post("/user/:userName/teams", authenticate, async (req, res, next) => {
+  try {
+    const { userName } = req.params;
+    const user = await User.findOne({
+      where: {
+        name: userName,
+      },
+    });
+    if (!user) {
+      return res.status(404).json({
+        error: "пользователь не найден",
+        success: false,
+      });
+    }
+    const team = await Team.findOne({
+      where: {
+        user_id: user.id,
+      },
+      include: [
+        {
+          model: Player,
+          as: "players",
+          through: {
+            attributes: [],
+          },
+          attributes: ["name", "avatar"],
+        },
+      ],
+    });
+
+    res.json({
+      team: team,
+      success: true,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
 
 //для админа получить все команды
 router.get(

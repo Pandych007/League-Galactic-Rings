@@ -44,14 +44,14 @@ router.delete(
     try {
       const player = await Player.findByPk(req.params.id);
       if (!player) {
-        return res.status(404).json({ error: "Игрока не найден" });
+        return res.status(404).json({ error: "Игрок не найден" });
       }
       await player.destroy();
       res.status(204).send();
     } catch (error) {
       next(error);
     }
-  }
+  },
 );
 
 router.post("/", authenticate, authorize("admin"), async (req, res, next) => {

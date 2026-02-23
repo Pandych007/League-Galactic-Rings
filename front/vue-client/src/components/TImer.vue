@@ -56,7 +56,7 @@ const props = defineProps({
   },
   resetIntervalDays: {
     type: Number,
-    default: 1,
+    default: 7,
   },
 });
 const startDate = ref(props.startDate);
@@ -65,7 +65,7 @@ const timerInterval = ref(null);
 
 const RESET_INTERVAL = computed(
   // 60
-  () => props.resetIntervalDays * 2 * 60 * 1000, // * 24
+  () => props.resetIntervalDays * 24 * 60 * 60 * 1000, //* 24
 );
 
 const timeUntilReset = computed(() => {

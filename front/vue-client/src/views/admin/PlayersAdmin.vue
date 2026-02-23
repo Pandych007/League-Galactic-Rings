@@ -5,6 +5,9 @@
       <button @click="showAddPlayerForm = true" class="add-player-btn">
         Добавить игрока
       </button>
+      <button @click="abdateStatistikPlaer" class="change_statistik_plaer">
+        Обновить игрока
+      </button>
     </div>
     <div class="stats-grid">
       <div class="stat-card">
@@ -322,8 +325,8 @@
                     saveingPlayer
                       ? "Сохранение..."
                       : editingPlayer
-                      ? "Сохранить изменения"
-                      : "Добавить игрока"
+                        ? "Сохранить изменения"
+                        : "Добавить игрока"
                   }}
                 </span>
               </button>
@@ -450,7 +453,18 @@ const positionFilter = ref("");
 const showAddPlayerForm = ref(false);
 const editingPlayer = ref(null); // Изменено на null для хранения объекта игрока
 const saveingPlayer = ref(false);
+const abdateStatistikPlaer = async () => {
+  try {
+    const response = await api.post("/admin/update");
 
+    if (response.data.success) {
+      loadPlayers();
+      alert("данные успешно обновлены");
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
 const playerForm = ref({
   name: "",
   position: "",
@@ -714,7 +728,9 @@ watch(currentPage, loadPlayers);
   border-radius: 12px;
   padding: 24px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
   border: 1px solid #f1f5f9;
 }
 
