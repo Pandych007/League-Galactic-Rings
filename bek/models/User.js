@@ -36,6 +36,11 @@ const User = sequelize.define(
       type: DataTypes.ENUM("user", "admin"),
       defaultValue: "user",
     },
+    avatar: {
+      type: DataTypes.STRING(255),
+      allowNull: true,
+      defaultValuel: null,
+    },
     budget: {
       type: DataTypes.INTEGER,
       defaultValue: 300,
