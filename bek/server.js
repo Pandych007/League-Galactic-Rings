@@ -29,11 +29,13 @@ app.use((req, res, next) => {
   console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
   next();
 });
+const avatarRoutes = require("./routes/avatar");
 
 app.use("/auth", authRoutes);
 app.use("/players", playersRoutes);
 app.use("/team", teamsRoutes);
 app.use("/ranking", rankingRoutes);
+app.use("/avatar", avatarRoutes); //avatar/asfasfasf.png
 
 const adminRoutes = require("./routes/admin");
 app.use("/admin", adminRoutes);

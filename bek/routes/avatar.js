@@ -13,10 +13,12 @@ router.post(
   authenticate,
   upload.single("avatar"),
   async (req, res, next) => {
+    console.log("upload");
     try {
       if (!req.file) {
         return res.status(400).json({ error: "Файл не загружен" });
       }
+      console.log("Файд зашружен", req.file);
       const filePath = req.file.path;
       const pPath = path.parse(filePath);
       const optPqth = path.join(pPath.dir, `${pPath.name}-op.jpg`);
@@ -64,4 +66,25 @@ router.post(
   },
 );
 
-//localhost:3000/uploads/avatar/asklfajhsklf.jpg
+//localhost:3000/uploads/avatar/asklfajhsklf.jpg?a=111
+
+router.get("/:filename", (req, res) => {
+  try {
+    const filename = req.params.filename;
+    const cleanFilename = filename.split("?")[0];
+    const filePath = path.join(__dirname, "../uploads/avatars", cleanFilename);
+    console.log("Запрос аватарки:", filePath);
+    if (fs.existsSync(filePath)) {
+      res.setHeader("Cache-Control", "public, max-age=3600");
+      res.sendFile(filePath);
+    } else {
+      console.log("Файл не найден:", filePath);
+      res.status(404).json({ error: "Аватарка не найдена" });
+    }
+  } catch (error) {
+    console.error("Ошибка при получении аватарки", error);
+    res.status(500).json({ error: "Ошибка при получении аватарки" });
+  }
+});
+
+module.exports = router;

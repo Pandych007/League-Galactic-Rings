@@ -3,9 +3,22 @@
 
   <div class="row">
     <div>
-      <img src="http://localhost:3000/img/avatar_prof.png" width="120px" />
+      <img :src="avatarUrl" width="120px" />
     </div>
     <div>
+      <div class="imput_file">
+        <label for="avatarUpload" class="imput_file_btm">
+          Добавить аватар
+        </label>
+        <input
+          type="file"
+          id="avatarUpload"
+          ref="fileInput"
+          style="display: none"
+          @change="uploadAvatar"
+          accept="image/jpeg,image/png,image/jpg,image/gif,image/webp"
+        />
+      </div>
       <div v-if="user" class="row-b">
         <div>
           <label>Имя:</label>
@@ -27,14 +40,15 @@
   </div>
 </template>
 <script setup>
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "../stores/auth";
 import api from "../services/api";
-
+const fileImput2 = ref(null);
 const router = useRouter();
 const authStore = useAuthStore();
 
+const uploadError = ref(null);
 const user = ref(null);
 const loading = ref(false);
 
@@ -50,7 +64,40 @@ const loadUserData = async () => {
     loading.value = false;
   }
 };
+const avatarUrl = computed(() => {
+  if (user.value?.avatar) {
+    return `${api.defaults.baseURL}/avatar/${user.value.avatar}`;
+  } else {
+    return "http://localhost:3000/img/avatar_prof.png";
+  }
+});
+const uploadAvatar = async (event) => {
+  const file = event.target.files[0];
+  if (!file) return;
+  if (file.size > 5 * 1024 * 1024) {
+    uploadError.value = "Файл слишком большой. Максимальный размер - 5М";
+    return;
+  }
+  const formData = new FormData();
+  formData.append("avatar", file);
 
+  loading.value = true;
+  uploadError.value = "";
+
+  try {
+    const response = await api.post("/avatar/upload", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      onDownloadProgress: (progressEvent) => {},
+    });
+    console.log("vue upload");
+
+    console.log(response);
+  } catch (error) {
+    console.error(error);
+  }
+};
 const logout = () => {
   authStore.logout();
   router.push("/");
