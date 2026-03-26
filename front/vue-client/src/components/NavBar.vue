@@ -11,14 +11,37 @@
       <template v-if="isAuthenticated">
         <template v-if="user.role != 'admin'">
           <router-link to="/teams">Моя команда</router-link>
-          <router-link to="/profile">Профиль</router-link>
         </template>
         <template v-else>
           <router-link to="/admin/players">Управление игроками</router-link>
           <router-link to="/admin/teams">Управление командами</router-link>
           <router-link to="/admin/users">Управление пользователями</router-link>
         </template>
-        <button @click="logout" class="btn">Выйти ({{ user?.name }})</button>
+        <div
+          class="header_logo"
+          style="display: flex; align-items: center; gap: 5px"
+          @click="showHideBlockLk"
+        >
+          <div class="header_avatar" style="height: 30px">
+            <img
+              :src="avatarUrl"
+              width="30px"
+              style="margin-bottom: 30px; border-radius: 50%"
+            />
+          </div>
+          <div class="header_login">
+            {{ user_data?.name }}
+          </div>
+        </div>
+        <div v-if="isBlockLk" class="list_lk">
+          <div>
+            <router-link to="/profile">Профиль</router-link>
+          </div>
+          <div>
+            <a @click="logout">Выйти</a>
+          </div>
+        </div>
+        <!-- <button @click="logout" class="btn">Выйти ({{ user?.name }})</button> -->
       </template>
       <template v-else>
         <button class="btn btn--outline">
@@ -57,15 +80,29 @@ const user_data = ref(null);
 const { user, token } = storeToRefs(authStore);
 const isAuthenticated = computed(() => !!token.value);
 const BUDGET_LIMIT = ref(0);
+const isBlockLk = ref(false);
 //let BUDGET_LIMIT = 0;
 const forceUpdate = ref(0);
 
+const showHideBlockLk = () => {
+  if (isBlockLk.value) {
+    isBlockLk.value = false;
+  } else {
+    isBlockLk.value = true;
+  }
+};
 const logout = () => {
   authStore.logout();
   forceUpdate.value++;
   router.push("/");
 };
-
+const avatarUrl = computed(() => {
+  if (user_data.value?.avatar) {
+    return `${api.defaults.baseURL}/avatar/${user_data.value.avatar}`;
+  } else {
+    return "http://localhost:3000/img/avatar_prof.png";
+  }
+}); // avatar
 const loadUserData = async () => {
   loading.value = true;
   try {
@@ -93,5 +130,13 @@ watch(token, () => {
   justify-content: right;
   padding: 20px;
   gap: 10px;
+}
+.list_lk {
+  position: absolute;
+  right: 5px;
+  top: 61px;
+  width: 200px;
+  background-color: #31066b;
+  padding: 10px;
 }
 </style>

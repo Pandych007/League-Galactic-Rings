@@ -52,6 +52,7 @@ router.post(
       });
 
       res.json({
+        success: true,
         message: "Аватарка успешно загружена",
         user: {
           id: updateUser.id,

@@ -3,7 +3,7 @@ const path = require("path");
 const fs = require("fs");
 
 const avatarDir = path.join(__dirname, "../uploads/avatars");
-if (fs.existsSync(avatarDir)) {
+if (!fs.existsSync(avatarDir)) {
   fs.mkdirSync(avatarDir, { recursive: true });
   console.log("Создана директория для аватарок", avatarDir);
 }

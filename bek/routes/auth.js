@@ -103,6 +103,7 @@ router.get("/me", authenticate, async (req, res) => {
       email: req.user.email,
       role: req.user.role,
       budget: req.user.budget,
+      avatar: req.user.avatar,
     },
   });
 });
